@@ -11,6 +11,22 @@ class UsersController < ApplicationController
     end
   end
 
+  def create_and_login
+    @user = User.new(user_params)
+
+    if @user.save
+      command = AuthenticateUser.call(@user.email, @user.password)
+
+      if command.success?
+        render json: { auth_token: command.result }
+      else
+        render json: { error: command.errors }, status: :unauthorized
+      end
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def user_params
