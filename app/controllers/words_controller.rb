@@ -15,7 +15,7 @@ class WordsController < ApplicationController
     @word = @list.words.new(word_params)
 
     if @word.save
-      render json: @word, status: :created, location: @word
+      render json: @word, status: :created
     else
       render json: @word.errors, status: :unprocessable_entity
     end
