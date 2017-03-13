@@ -2,16 +2,20 @@ class ListsController < ApplicationController
   before_action :set_list, only: [:show, :update, :destroy]
 
   def index
-    @lists = List.all
+    @lists = @current_user.lists.all
     render json: @lists
   end
 
   def show
-    render json: @list
+    if @list
+      render json: @list
+    else
+      render json: { error: 'The list does not exist' }, status: :unprocessable_entity
+    end
   end
 
   def create
-    @list = List.new(list_params)
+    @list = @current_user.lists.new(list_params)
 
     if @list.save
       render json: @list, status: :created, location: @list
@@ -34,7 +38,7 @@ class ListsController < ApplicationController
 
   private
     def set_list
-      @list = List.find(params[:id])
+      @list = @current_user.lists.find_by(id: params[:id])
     end
 
     def list_params
