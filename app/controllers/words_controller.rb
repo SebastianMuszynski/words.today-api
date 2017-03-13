@@ -1,8 +1,9 @@
 class WordsController < ApplicationController
+  before_action :set_list
   before_action :set_word, only: [:show, :update, :destroy]
 
   def index
-    @words = Word.all
+    @words = @list.words.all
     render json: @words
   end
 
@@ -11,7 +12,7 @@ class WordsController < ApplicationController
   end
 
   def create
-    @word = Word.new(word_params)
+    @word = @list.words.new(word_params)
 
     if @word.save
       render json: @word, status: :created, location: @word
@@ -33,8 +34,14 @@ class WordsController < ApplicationController
   end
 
   private
+    def set_list
+      @list = @current_user.lists.find_by(id: params[:list_id])
+      render json: { error: 'The list does not exist' }, status: 422 unless @list
+    end
+
     def set_word
-      @word = Word.find(params[:id])
+      @word = @list.words.find_by(id: params[:id])
+      render json: { error: 'The word does not exist' }, status: 422 unless @word
     end
 
     def word_params

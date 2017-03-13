@@ -7,11 +7,7 @@ class ListsController < ApplicationController
   end
 
   def show
-    if @list
-      render json: @list
-    else
-      render json: { error: 'The list does not exist' }, status: :unprocessable_entity
-    end
+    render json: @list
   end
 
   def create
@@ -39,6 +35,7 @@ class ListsController < ApplicationController
   private
     def set_list
       @list = @current_user.lists.find_by(id: params[:id])
+      render json: { error: 'The list does not exist'}, status: 422 unless @list
     end
 
     def list_params
