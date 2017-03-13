@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  resources :words
-  post 'authenticate', to: 'authentication#authenticate'
   post 'users', to: 'users#create_and_login'
+  post 'authenticate', to: 'authentication#authenticate'
   resources :lists
+  resources :words
 end
