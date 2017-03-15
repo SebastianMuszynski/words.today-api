@@ -1,5 +1,5 @@
 class TranslationsController < ApplicationController
-  before_action :set_word
+  before_action :set_word, only: [:index]
   before_action :set_translation, only: [:show, :update, :destroy]
 
   def index
@@ -12,7 +12,7 @@ class TranslationsController < ApplicationController
   end
 
   def create
-    @translation = @word.translations.new(translation_params)
+    @translation = Translation.new(translation_params)
 
     if @translation.save
       render json: @translation, status: :created
@@ -40,7 +40,7 @@ class TranslationsController < ApplicationController
     end
 
     def set_translation
-      @translation = @word.translations.find_by(id: params[:id])
+      @translation = Translation.find_by(id: params[:id])
     end
 
     def translation_params

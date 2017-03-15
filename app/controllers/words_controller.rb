@@ -45,6 +45,6 @@ class WordsController < ApplicationController
     end
 
     def word_params
-      params.require(:word).permit(:name, :list_id)
+      params.require(:word).permit(:name, :list_id, translations_attributes: [:id, :name])
     end
 end
