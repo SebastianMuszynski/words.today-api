@@ -32,10 +32,16 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @current_user.update(user_params)
-      render json: @current_user
+    authenticate = AuthenticateUser.call(params[:email], params[:password])
+
+    if authenticate.success?
+      if @current_user.update(user_params)
+        render json: @current_user
+      else
+        render json: @current_user.errors, status: :unprocessable_entity
+      end
     else
-      render json: @current_user.errors, status: :unprocessable_entity
+      render json: { error: 'Wrong password.' }, status: :unprocessable_entity
     end
   end
 
